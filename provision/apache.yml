@@ -1,0 +1,31 @@
+---
+- name: install required package
+  apt: pkg={{item}}
+  with_items:
+    - apache2
+    - apache2-dev
+    - php5
+    - php5-dev
+    - php-pear
+    - php-apc
+    - php5-mysql
+    - php5-gd
+    - php5-curl
+  tags: package
+
+- name: set apc enabled
+  lineinfile: dest=/etc/php5/mods-available/apcu.ini insertbefore=EOF line="apc.rfc1867 = 1"
+  tags: php
+  # apache related functions
+- name: enable mod_rewrite
+  shell: a2enmod rewrite
+  tags: apache
+- name: disable default site setting
+  shell: a2dissite 000-default
+  tags: apache
+- name: enable apache2
+  service: name=apache2 state=restarted enabled=yes
+  tags: apache
+# http://qiita.com/ariarijp/items/3e31314e9ebc6035cf4f
+- name: /etc/init/rc.conf bug fix
+  lineinfile: dest=/etc/init/rc.conf regexp="^console output" line="console log" backrefs=yes

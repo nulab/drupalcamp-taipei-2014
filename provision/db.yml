@@ -1,0 +1,17 @@
+---
+- name: install required package
+  apt: pkg={{item}}
+  with_items:
+    - mysql-server-5.5
+    - python-mysqldb
+  tags:
+    - package
+    - mysql
+
+- name: create mysql db
+  mysql_db: name=drupal
+  tags: mysql
+
+- name: create mysql user
+  mysql_user: name=drupal password=drupal priv="drupal.*:SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, CREATE TEMPORARY TABLES"
+  tags: mysql

@@ -1,0 +1,28 @@
+---
+# install drush
+- shell: >
+    wget --quiet -O - http://ftp.drupal.org/files/projects/drush-7.x-5.9.tar.gz | tar -zxf - -C /usr/local/share ;
+    ln -s /usr/local/share/drush/drush /usr/local/bin/drush ;
+  args:
+    creates: /usr/local/bin/drush
+  tags: drupal
+
+# install initial site if not exists
+- shell: >
+    /usr/local/bin/drush si --db-url=mysql://drupal:drupal@localhost/drupal --account-pass=admin -y
+  args:
+    chdir: /srv/www
+    creates: /srv/www/sites/default/settings.php
+  tags: drupal
+
+- name: copy drupal apache setting
+  copy: src=files/etc/apache2/sites-available/drupal.conf dest=/etc/apache2/sites-available/drupal.conf mode=0644
+  tags: drupal
+  notify: restart apache
+
+- name: enable drupal site setting
+  shell: a2ensite drupal
+  tags: drupal
+  args:
+    creates: /etc/apache2/sites-enabled/drupal
+  notify: restart apache
