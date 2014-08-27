@@ -15,14 +15,13 @@ After successfully startup, access to http://172.28.128.4 and login by `admin` w
 
 Once you download the basic box, it will take about 7,8 minutes to start environment from scratch.
 
-### Clean up development environment
+### Clean up environment
 
     vagrant destroy -f
     rm -f www/sites/default/settings.php
     vagrant up
 
 ## Docker
-
 
 ### Start environment
 
@@ -32,7 +31,14 @@ Start mysql container first since Docker image doesn't contain MySQL.
 
 After starting mysql container, run your Drupal container next.
 
-    docker run --name drupal --link mysql-drupal:mysql -p 8080:80 -i -t tksmd/dc2014taipei /sbin/my_init -- bash -l
+    docker run --name drupal --link mysql-drupal:mysql -p 8080:80 -i -t tksmd/drupalcamp-taipei-2014 /sbin/my_init -- bash -l
+
+You can detach from container by typing `^P^Q`.
+
+### Clean up environment
+
+    docker rm -f drupal
+    docker rm -f mysql-drupal
 
 ### Build Image
 
