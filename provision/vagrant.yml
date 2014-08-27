@@ -1,4 +1,8 @@
 ---
+- name: copy screen.rc
+  copy: src=files/home/vagrant/.screenrc dest=/home/vagrant/.screenrc owner=vagrant mode=0644
+  sudo: no
+
 - name: install required package
   apt: pkg={{item}}
   with_items:

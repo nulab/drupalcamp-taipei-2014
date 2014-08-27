@@ -22,7 +22,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder "provision/", "/srv/provision"
 #  config.vm.synced_folder "www/", "/srv/www/", type: "nfs"
 
-  config.vm.provision "shell", path: "bootstrap.sh"
+  config.vm.provision "shell", path: "install_ansible.sh"
+  config.vm.provision "shell", inline: "cd /srv/provision; ansible-playbook -i 127.0.0.1, -c local main.yml -vvv -e provisioned_env=vagrant -e mysql_host=localhost"
 
   config.vm.provider "virtualbox" do |v|
     v.memory = 1024

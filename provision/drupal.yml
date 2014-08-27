@@ -7,14 +7,6 @@
     creates: /usr/local/bin/drush
   tags: drupal
 
-# install initial site if not exists
-- shell: >
-    /usr/local/bin/drush si --db-url=mysql://drupal:drupal@localhost/drupal --account-pass=admin -y
-  args:
-    chdir: /srv/www
-    creates: /srv/www/sites/default/settings.php
-  tags: drupal
-
 - name: copy drupal apache setting
   copy: src=files/etc/apache2/sites-available/drupal.conf dest=/etc/apache2/sites-available/drupal.conf mode=0644
   tags: drupal

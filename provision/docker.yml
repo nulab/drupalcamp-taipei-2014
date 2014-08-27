@@ -1,0 +1,9 @@
+---
+- name: disable ulimit in apache envvars
+  lineinfile: dest=/etc/apache2/envvars insertafter="^#APACHE_ULIMIT_MAX_FILES='ulimit -n 65536'" line="APACHE_ULIMIT_MAX_FILES=true"
+
+- name: Make runit directory for apache
+  file: path=/etc/service/apache2/ state=directory
+
+- name: copy runit run script for apache
+  copy: src=files/etc/service/apache2/run dest=/etc/service/apache2/run owner=root mode=0755

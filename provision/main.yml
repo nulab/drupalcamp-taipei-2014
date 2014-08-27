@@ -5,24 +5,41 @@
   tasks:
   - name: apt update
     apt: update_cache=yes
-  - name: upgrade all packages
-    apt: upgrade=dist
+#  - name: upgrade all packages
+#    apt: upgrade=dist
   - name: install basic package
     apt: pkg={{item}}
     with_items:
       - screen
+      - wget
       - language-pack-ja
       - postfix
       - mailutils
       - git
-  - name: copy screen.rc
-    copy: src=files/home/vagrant/.screenrc dest=/home/vagrant/.screenrc owner=vagrant mode=0644
-    sudo: no
 
   - include: apache.yml
-  - include: db.yml
+
+  - include: vagrant.yml
+    when: provisioned_env == "vagrant"
+
+  - include: docker.yml
+    when: provisioned_env == "docker"
+
   - include: drupal.yml
+
+  # install initial site if not exists
+  - shell: >
+      /usr/local/bin/drush si --db-url=mysql://drupal:drupal@localhost/drupal --account-pass=admin -y
+    args:
+      chdir: /srv/www
+      creates: /srv/www/sites/default/settings.php
+    tags: drupal
+    notify: notify site install
+    when: provisioned_env == "vagrant"
 
   handlers:
   - name: restart apache
     service: name=apache2 state=restarted
+
+  - name: notify site install
+    debug: msg="drush site-install done. you can access to your drupal by admin whose password is admin"

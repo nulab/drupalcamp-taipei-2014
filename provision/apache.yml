@@ -14,7 +14,7 @@
   tags: package
 
 - name: set apc enabled
-  lineinfile: dest=/etc/php5/mods-available/apcu.ini insertbefore=EOF line="apc.rfc1867 = 1"
+  lineinfile: dest=/etc/php5/mods-available/apcu.ini insertbefore=BOF line="apc.rfc1867 = 1"
   tags: php
   # apache related functions
 - name: enable mod_rewrite

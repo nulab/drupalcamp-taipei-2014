@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# https://github.com/geo-data/openstreetmap-website-docker/blob/master/apache2/run
+
+##
+# Runit run script for apache2
+#
+
+# Activate the Ubuntu Apache environment
+. /etc/apache2/envvars
+
+exec /usr/sbin/apache2 -k start -DNO_DETACH
